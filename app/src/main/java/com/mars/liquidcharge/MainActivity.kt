@@ -11,6 +11,8 @@ import android.widget.TextView
 
 class MainActivity : Activity() {
 
+    private lateinit var status: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -24,12 +26,12 @@ class MainActivity : Activity() {
             textSize = 28f
         }
 
-        val status = TextView(this).apply {
+        status = TextView(this).apply {
             textSize = 18f
             setPadding(0, 32, 0, 32)
         }
 
-        val button = Button(this).apply {
+        val permissionButton = Button(this).apply {
             text = "Allow Display Over Other Apps"
             setOnClickListener {
                 startActivity(
@@ -41,12 +43,31 @@ class MainActivity : Activity() {
             }
         }
 
+        val testButton = Button(this).apply {
+            text = "Test Charging Animation"
+            setOnClickListener {
+                ChargeOverlay.show(this@MainActivity)
+            }
+        }
+
         layout.addView(title)
         layout.addView(status)
-        layout.addView(button)
+        layout.addView(permissionButton)
+        layout.addView(testButton)
 
         setContentView(layout)
 
+        updateStatus()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::status.isInitialized) {
+            updateStatus()
+        }
+    }
+
+    private fun updateStatus() {
         status.text = if (Settings.canDrawOverlays(this)) {
             "Overlay permission: ON"
         } else {
