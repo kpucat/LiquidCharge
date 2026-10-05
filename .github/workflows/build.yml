@@ -26,3 +26,9 @@ jobs:
 
       - name: Build
         run: gradle assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: LiquidCharge-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
